@@ -1,0 +1,4 @@
+# Disk bytes equal blob bytes. Applied at creation, not after: the parent corpus
+# had 52 files whose working copies hashed differently from their blobs under
+# core.autocrlf, which made every manifest md5 irreproducible from the repository.
+* text=auto eol=lf
