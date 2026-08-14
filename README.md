@@ -1,6 +1,6 @@
 # SIDE-window
 
-**Lemma A and the window arithmetic, as decidable statements about small naturals.**
+**Lemma A, the window arithmetic, and the window ladder — as decidable statements about small naturals.**
 
 Vanilla Lean 4 (`v4.29.1`). **No Mathlib, no Batteries, no dependencies of any kind.** Every theorem is
 closed by `decide`, so the whole library is checkable by the Lean kernel alone, and every terminal is
@@ -66,9 +66,35 @@ Lemma 5.2's un-run re-derivation would cover.
 about it — because a Lean file containing a *name* for it would invite a citation it cannot support. It
 stays in `THE_ATTEMPT_RECORD`, where it is graded.
 
+## The ladder (`v0.2`, `SIDEWindow/Ladder.lean`)
+
+`v0.1` proved the prime-free window `(1/2, 2)` and the one-prime window `(1/3, 3)`. `v0.2` adds the rung
+above them and the counting function that generates all three.
+
+| terminal | statement |
+|:--|:--|
+| `window_two_prime` | `primePowersLT 4 = [2, 3]` — the window `(1/4, 4)` carries exactly two |
+| `window_four_is_maximal_two_prime` | `W 4 = 2 ∧ W 5 = 3` |
+| `the_window_ladder` | `W 2 = 0 ∧ W 3 = 1 ∧ W 4 = 2 ∧ W 5 = 3` — the three windows in one statement |
+| `W_table_low` · `W_table_mid` | `W` tabulated on the rungs `2 … 18` |
+| `W_flat_at_six` | `W 6 = W 7` — the first composite that is not a prime power is where the count first fails to advance |
+| `W_flat_run_at_fourteen` | `W 14 = W 15 = W 16` — the first flat run of two |
+| `primePowers_below_eighteen` | `[2, 3, 4, 5, 7, 8, 9, 11, 13, 16, 17]` |
+
+### **`W` HAS NOTHING TO DO WITH THE CORPUS'S `W_2` / `W_∞`**
+
+`W n` counts prime powers below `n`. **The name collision is unfortunate and is flagged in the module
+docstring as well as here**, because `W_2` and `W_∞` are the corpus's windowed quantities and **nothing in
+this repository bears on the sign of `W_∞ − W_2`.**
+
+**`W` is tabulated, not characterized.** No closed form, no asymptotic, no growth statement is proved or
+implied — in particular nothing here is a Chebyshev or prime-counting estimate. That the count is constant
+between consecutive prime powers is *visible* in the table and is **not** proved as a general statement;
+it is exactly the step needed to lift maximality from integer bounds to real `L`, and it is not taken here.
+
 ## Provenance
 
-Sized as the smallest real Lean target of the Phase-2 board, built 2026-08-14.
+Sized as the smallest real Lean target of the Phase-2 board, built 2026-08-14; the ladder added the same day as `v0.2`.
 
 **Self-contained by construction:** every definition and every theorem used is written in this
 repository. It imports nothing beyond Lean 4 core, draws on no private repository, and reproduces no
