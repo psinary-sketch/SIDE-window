@@ -1,15 +1,18 @@
 # SIDE-window
 
-**Lemma A, the window arithmetic, and the window ladder — as decidable statements about small naturals.**
+**Lemma A, the window arithmetic, the window ladder, and the apex at the square — as decidable
+statements about small naturals.**
 
 Vanilla Lean 4 (`v4.29.1`). **No Mathlib, no Batteries, no dependencies of any kind.** Every theorem is
-closed by `decide`, so the whole library is checkable by the Lean kernel alone, and every terminal is
-**fully axiom-free** — not `{propext, Classical.choice, Quot.sound}`, but *no axioms at all*.
+closed by `decide` — except `turn_is_square`, which is one core term-mode congruence, and which is
+term-mode precisely so that it stays axiom-free. The whole library is checkable by the Lean kernel alone,
+and **all 32 terminals are fully axiom-free** — not `{propext, Classical.choice, Quot.sound}`, but *no
+axioms at all*.
 
 ```
 $ lake build && lake env lean AxiomCheck.lean
 'SIDEWindow.lemmaA' does not depend on any axioms
-... (11 terminals, all the same)
+... (32 terminals, all the same)
 ```
 
 ## What is in here
@@ -57,10 +60,15 @@ travels with the source.
 
 ## The δ/L law is deliberately absent
 
-The corpus's `δ/L` law — Φ's negative fraction `= 1 − log 2 / log L`, measured at bank over
-`L ∈ {2.2, 2.5, 3.0, 3.5, 4.0}` — is a **conjecture with a measured table**. It is `MEASURED-AT-BANK`,
-**never proved**, and its two largest rows (`L = 3.5`, `L = 4.0`) extrapolate past the `(1,3]` range that
-Lemma 5.2's un-run re-derivation would cover.
+The corpus's `δ/L` law — Φ's negative fraction on `V` — is a **conjecture with a measured table**. It is
+`MEASURED-AT-BANK`, **never proved**, and every window length it has been measured at lies past the
+`(1,3]` range that Lemma 5.2's un-run re-derivation would cover.
+
+**Its statement has moved twice in one day, which is the best reason to keep it out of a kernel.** It was
+banked as `1 − log 2 / log L` over `L ∈ {2.2 … 4.0}`; on 2026-08-17 it was restated as
+`min(1 − log2/logL, log2/logL)` when the lag branch was first measured; and later the same day that too
+was superseded by a **sawtooth** whose first two teeth those branches are. **A Lean file carrying a name
+for any one of the three would now be citing a superseded statement.**
 
 **It appears in this repository only as a comment.** There is no definition, no statement and no theorem
 about it — because a Lean file containing a *name* for it would invite a citation it cannot support. It
@@ -92,9 +100,56 @@ implied — in particular nothing here is a Chebyshev or prime-counting estimate
 between consecutive prime powers is *visible* in the table and is **not** proved as a general statement;
 it is exactly the step needed to lift maximality from integer bounds to real `L`, and it is not taken here.
 
+## The apex at the square (`v0.3`, `SIDEWindow/Apex.lean`)
+
+For each prime `p`, the number `p²` plays **two roles at once**, and this file compiles the arithmetic
+half of that coincidence.
+
+* **Role 1 — the branch turn.** For the one-prime-`p` lag form, the lag is `log p` and the room is
+  `log L − log p`. They are equal exactly when `log L = 2 log p`, i.e. exactly at `L = p²`.
+* **Role 2 — the second ladder rung.** The powers of `p` are `p, p², p³, …`; the second is `p²`, and it
+  is the next one to enter a growing window.
+
+**They name the same number.**
+
+| terminal | statement |
+|:--|:--|
+| `turn_is_square` | `p ^ 2 = p * p` — **the only statement here holding for every `p`** |
+| `apex_2` … `apex_13` | `pPowersLT p (p^2) = [p]` and `pPowersLE p (p^2) = [p, p²]`, for `p = 2, 3, 5, 7, 11, 13` |
+| `apex_counts` | the same six as counts: one rung below the turn, two at or below it |
+| `apex_is_the_entry_point` | `W_p(p²) = 1` and `W_p(p²+1) = 2` — the rung count increments exactly as the window passes `p²` |
+| `apex_ladder_is_not_window` | `pPowersLT 2 4 = [2]` but `primePowersLT 4 = [2, 3]`, **and the two are unequal** |
+| `apex_window_is_larger` | at `p² = 9` and `25` the full window holds `6` and `13` prime powers against the ladder's `1` |
+| `isPowerOf_examples` | the single-prime power test pinned by examples |
+
+### **THIS COMPILES THE ARITHMETIC COINCIDENCE ONLY**
+
+* **Role 1 is not formalized.** "Lag equals room exactly at `L = p²`" is a statement about real
+  logarithms. **This library contains no logarithms and no reals.** The step is one line of ordinary
+  mathematics and a reader who wants it must supply it.
+* **Nothing analytic is proved.** That the negative-direction count of `Φ` actually turns at `L = p²` is
+  a **measured** statement about a discretized bench. It is not proved here and **nothing here is
+  evidence for it.**
+* **The general `p` is proved for one fact only.** `turn_is_square` holds for every natural `p`. Every
+  other theorem is `decide` on a concrete `p`. **There is no induction and no general statement about all
+  primes**, because `decide` cannot give one and this repository imports nothing that could.
+* **The ladder is not the window.** `pPowersLT p x` counts powers of `p` alone; a real window holds the
+  powers of every prime below `L`. `apex_ladder_is_not_window` states the difference **as a theorem** so
+  it cannot be glossed over.
+
+### **EXECUTOR DISCLOSURE — the axiom print caught a tactic, on its first run**
+
+`turn_is_square` was first written `by rw [Nat.pow_succ, Nat.pow_one]`. That compiles, and it is correct,
+and **it costs `propext`** — `rw` goes through `Eq.mpr`. **One tactic would have ended this repository's
+headline property**, which is that nothing here depends on any axiom at all. It was caught by
+`AxiomCheckApex.lean` on its first run and replaced by a term-mode proof,
+`congrArg (fun x => x * p) (Nat.one_mul p)`, which is axiom-free. *Kin: the `v0.1` tabulation error caught
+by `decide` at build time. **Both times the instrument this repository exists to run is what found it.***
+
 ## Provenance
 
-Sized as the smallest real Lean target of the Phase-2 board, built 2026-08-14; the ladder added the same day as `v0.2`.
+Sized as the smallest real Lean target of the Phase-2 board, built 2026-08-14; the ladder added the same
+day as `v0.2`; the apex added 2026-08-17 as `v0.3`.
 
 **Self-contained by construction:** every definition and every theorem used is written in this
 repository. It imports nothing beyond Lean 4 core, draws on no private repository, and reproduces no
@@ -105,4 +160,6 @@ material from anywhere else in the programme. **Nothing here deposits.**
 ```
 lake build
 lake env lean AxiomCheck.lean
+lake env lean AxiomCheckLadder.lean
+lake env lean AxiomCheckApex.lean
 ```
