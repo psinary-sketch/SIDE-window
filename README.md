@@ -1,18 +1,18 @@
 # SIDE-window
 
-**Lemma A, the window arithmetic, the window ladder, and the apex at the square — as decidable
-statements about small naturals.**
+**Lemma A, the window arithmetic, the window ladder, the apex at the square, and the inertia count of the
+discrete lag form — as decidable statements about small naturals.**
 
 Vanilla Lean 4 (`v4.29.1`). **No Mathlib, no Batteries, no dependencies of any kind.** Every theorem is
 closed by `decide` — except `turn_is_square`, which is one core term-mode congruence, and which is
 term-mode precisely so that it stays axiom-free. The whole library is checkable by the Lean kernel alone,
-and **all 32 terminals are fully axiom-free** — not `{propext, Classical.choice, Quot.sound}`, but *no
+and **all 43 terminals are fully axiom-free** — not `{propext, Classical.choice, Quot.sound}`, but *no
 axioms at all*.
 
 ```
 $ lake build && lake env lean AxiomCheck.lean
 'SIDEWindow.lemmaA' does not depend on any axioms
-... (32 terminals, all the same)
+... (43 terminals, all the same)
 ```
 
 ## What is in here
@@ -146,10 +146,57 @@ headline property**, which is that nothing here depends on any axiom at all. It 
 `congrArg (fun x => x * p) (Nat.one_mul p)`, which is axiom-free. *Kin: the `v0.1` tabulation error caught
 by `decide` at build time. **Both times the instrument this repository exists to run is what found it.***
 
+## The inertia count of the discrete lag form (`v0.4`, `SIDEWindow/Sawtooth.lean`)
+
+Let `S_k` be the `M × M` symmetric matrix with `(S_k)_{ij} = 1` exactly when `|i − j| = k` — the
+shifted-correlation form at shift `k` on `M` grid points. The claim this module is the arithmetic half of:
+
+| | | |
+|:--|:--|:--|
+| **(a)** | `i ~ j` only when `i = j ± k`, so `{0,…,M−1}` splits into the `k` residue classes mod `k` and `S_k` acts on each as a **path graph** | ### **COMPILED HERE** |
+| **(b)** | `P_m`'s spectrum `2cos(πj/(m+1))` is symmetric about `0`, with nullity `1` iff `m` is odd | ### **NOT COMPILED** |
+| **(c)** | hence `#negatives = (M − nullity)/2`, `nullity = #odd-length chains` | arithmetic **compiled**, resting on (b) |
+
+| terminal | statement |
+|:--|:--|
+| `chains_partition` | the chain lengths sum to `M` — **the decomposition is a partition, checked** |
+| `chain_shape` | with `M = qk + s`: `s` chains of length `q+1`, `k − s` of length `q` |
+| `nullity_cf_agrees` · `negCount_cf_agrees` | the closed forms match the direct definitions, `q = 1 … 7`, three values of `k` |
+| `count_is_exact_halving` | `M` and the nullity share parity, so `(M − nullity)/2` is exact, not truncated |
+| `the_teeth` | `q = 1 → M−k`, `q = 2 → k`, `q = 3 → M−2k`, `q = 4 → 2k`, `q = 5 → M−3k`, `q = 6 → 3k` |
+| ### **`apex_is_exactly_half`** | ### **at every even `q`, `2 · count = M`** — the apex, at three values of `k` |
+| `troughs_are_below_half` | at every odd `q`, strictly below half |
+| `bench_predictions_omega_1e3` · `..._2e3` | the **25 integer predictions the bench was tested against**, certified as arithmetic |
+| ### **`third_apex_at_L64`** | at `ω = 10⁻³`, `L = 64`: `M = 4159`, `k = 693`, count `= 2079 = (M−1)/2` |
+
+### **WHY (b) IS NOT HERE, AND IT IS RECORDED RATHER THAN GLOSSED**
+
+(b) is a statement about eigenvalues of a real symmetric matrix — spectra, multiplicity, symmetry of a
+spectrum. **None of that exists in Lean 4 core; it needs Mathlib.**
+
+> ### **MATHLIB IS NOT BUILT IN THIS ENVIRONMENT:** `Mathlib.olean` is absent, and the local checkout's
+> toolchain is `v4.30.0-rc1` against this repository's `v4.29.1`. **Building it is not a half-sitting, and
+> inventing a proof of (b) would be worse than leaving it visibly undone.** *It is left visibly undone.*
+> If it is ever compiled it goes in a **companion module with its own axiom profile**, so this library's
+> headline — *no axioms at all* — stays true of what is actually here.
+
+### **AND THE OPERATOR IS NOT THE FORM**
+
+The bench measures `A = A_main + c·(ω/2)·S_k` on a codimension-one subspace, not `S_k`. Its counts agree
+with `(M − nullity)/2` **to within one offender** at every window measured, from `r = M/k ≈ 1.7` to
+`r = 7`. ### **THAT AGREEMENT IS BENCH-GRADE AND IS PROVED NOWHERE.** `A_main` is measured to have 2–3
+positive eigenvalues, so it is not negative semidefinite and no comparison theorem applies. **Nothing in
+this module is evidence about the operator.**
+
+**Also not proved:** the general `M`, `k` — every theorem is `decide` on concrete values, and the closed
+forms are *checked* against the direct definitions on small cases, not *proved* equal in general. And the
+passage from a real window `log L` and a real lag `log 2` to the integers `M`, `k` **is the discretization
+itself** and is not formalized.
+
 ## Provenance
 
 Sized as the smallest real Lean target of the Phase-2 board, built 2026-08-14; the ladder added the same
-day as `v0.2`; the apex added 2026-08-17 as `v0.3`.
+day as `v0.2`; the apex added 2026-08-17 as `v0.3`; the lag-form inertia count the same day as `v0.4`.
 
 **Self-contained by construction:** every definition and every theorem used is written in this
 repository. It imports nothing beyond Lean 4 core, draws on no private repository, and reproduces no
@@ -162,4 +209,5 @@ lake build
 lake env lean AxiomCheck.lean
 lake env lean AxiomCheckLadder.lean
 lake env lean AxiomCheckApex.lean
+lake env lean AxiomCheckSawtooth.lean
 ```
