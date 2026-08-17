@@ -180,6 +180,37 @@ spectrum. **None of that exists in Lean 4 core; it needs Mathlib.**
 > If it is ever compiled it goes in a **companion module with its own axiom profile**, so this library's
 > headline — *no axioms at all* — stays true of what is actually here.
 
+### **THE MATHLIB COMPANION, PRICED — NOT BUILT** *(2026-08-17)*
+
+**The statement to compile.** For the `M × M` real symmetric `S` with `S_ij ≠ 0` exactly when `|i − j| ∈ K`,
+every `k ∈ K` odd: **(i)** index parity is a bipartition, so `D S D = −S` for `D = diag((−1)^i)`, hence
+`spec(S) = −spec(S)` and `#pos = #neg`; **(ii)** for `K = {k}` the components are paths and the rank is
+`2·Σ⌊m_r/2⌋`. Together: `inertia = (μ, μ, M − 2μ)`.
+
+**What Mathlib supplies** — *verified by grepping the checkout at `D:\mathlib4` (sources only; not built)*:
+`Matrix.IsHermitian` *(`Mathlib/LinearAlgebra/Matrix/Hermitian.lean`)* · the self-adjoint spectral
+apparatus `LinearMap.IsSymmetric.eigenvalues` *(`Mathlib/Analysis/InnerProductSpace/Spectrum.lean:277`)* ·
+the quadratic-form signature `sigPos` / `sigNeg` *(`Mathlib/LinearAlgebra/QuadraticForm/Signature.lean:65,98`)* ·
+`SimpleGraph.adjMatrix`, `SimpleGraph.pathGraph`, `SimpleGraph.IsBipartiteWith`.
+
+**What Mathlib does NOT supply** — *same grep*: ### **no tridiagonal determinant or Chebyshev recursion**
+*(`grep -rl "tridiagonal" Mathlib/` returns nothing)* · ### **no path-graph spectrum** *(no file under
+`Mathlib/Combinatorics/SimpleGraph/` mentions `eigenvalue`)* · **no rank-equals-twice-matching identity.**
+
+> ### **SO THE COMPANION IS NOT A CITATION EXERCISE. BOTH FACTS WOULD HAVE TO BE PROVED.** *(i) is short —
+> conjugate by a diagonal sign matrix, then read off the spectrum. **(ii) is the real cost**: the
+> zero-diagonal tridiagonal recursion `D_m = −D_{m−2}`, `D_0 = 1`, `D_1 = 0`, giving `det = 0` for odd `m`
+> and `±1` for even, and then a rank argument from principal minors.*
+
+**Toolchain and layout.** This library is pinned at `leanprover/lean4:v4.29.1`; the local Mathlib checkout
+is `v4.30.0-rc1` and unbuilt. **The entry cost is a Mathlib build (or cache fetch) plus that move, before a
+line of the companion is written.** The companion would be a **separate lake package** depending on Mathlib,
+importing `SIDEWindow` and never imported by it, with its own `AxiomCheckSpectral.lean` reporting
+`{propext, Classical.choice, Quot.sound}` — because Mathlib content will not be axiom-free.
+### **That layout is what keeps this library's headline a true statement about what is actually in it.**
+*Rough price: (i) about half a sitting; (ii) one to two sittings for the recursion and its rank consequence,
+more if the general matching identity is wanted rather than the path case.*
+
 ### **AND THE OPERATOR IS NOT THE FORM**
 
 The bench measures `A = A_main + c·(ω/2)·S_k` on a codimension-one subspace, not `S_k`. Its counts agree
