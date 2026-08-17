@@ -211,6 +211,38 @@ importing `SIDEWindow` and never imported by it, with its own `AxiomCheckSpectra
 *Rough price: (i) about half a sitting; (ii) one to two sittings for the recursion and its rank consequence,
 more if the general matching identity is wanted rather than the path case.*
 
+### **THE `v0.5` TARGET, PRICED — ### AND IT MAY NOT NEED MATHLIB AT ALL**
+
+**The 2026-08-17 two-lag measurement found a stronger statement than the one-lag sawtooth:**
+### **`NPOS = μ`, the MAXIMUM MATCHING NUMBER of the shift graph** — measured exactly at four two-lag cells,
+with the sawtooth falling out as its one-lag evaluation `μ(P_m) = ⌊m/2⌋`.
+
+> ### **AND `μ` IS COMBINATORIAL, SO IT IS DECIDABLE FOR FIXED `M, k` — no reals, no spectra, no Mathlib.**
+
+**The certificate route, which avoids searching for `μ` in the kernel.** Exhibit two objects and check both
+by `decide`: a **matching** `P` (pairwise disjoint edges of the graph) and a **vertex cover** `C` (every edge
+has an endpoint in `C`) with `|P| = |C| = s`. Then `μ ≥ s` from `P`, and `μ ≤ s` because **the edges of any
+matching are disjoint and each needs its own cover vertex** — a one-line pigeonhole, **not König's theorem**,
+so nothing has to be imported or proved about bipartite duality.
+
+| piece | cost |
+|:--|:--|
+| `isMatching` / `isCover` as `Bool` predicates, plus the graph as an edge list | small |
+| certificate pairs for concrete `(M, k)` and `(M, k₂, k₃)`, checked by `decide` | small per cell, but the certificates must be **generated outside Lean** and pasted in — the bench already computes them |
+| ### **the general lemma `|matching| ≤ |cover|`** | ### **the only non-`decide` part, and the whole risk** |
+
+> ### **THE RISK IS THE AXIOM PROFILE, AND TODAY GAVE THE WARNING.** *`turn_is_square` cost `propext` from a
+> single `rw`, caught by the axiom print on its first run.* **An induction over a list to prove
+> `|matching| ≤ |cover|` will almost certainly pull in tactics that do the same.** *So `v0.5` is priced as:
+> about one sitting for the definitions and the certificates, plus an open question about whether the
+> injection lemma can be written in term mode.* ### **If it cannot, the lemma goes in the companion beside
+> the spectral input, and the vanilla library keeps only the `decide`-checked certificates — which is still
+> a real statement: "here is a matching of size `s` and a cover of size `s` for this graph."**
+
+**And what `v0.5` would still NOT buy:** the step from `μ` to the eigenvalue count is exactly the spectral
+input **(b)** above, which is not here. ### **A certified `μ` is a certified combinatorial number, not a
+certified inertia.**
+
 ### **AND THE OPERATOR IS NOT THE FORM**
 
 The bench measures `A = A_main + c·(ω/2)·S_k` on a codimension-one subspace, not `S_k`. Its counts agree
