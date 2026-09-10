@@ -6,8 +6,8 @@ discrete lag form — as decidable statements about small naturals.**
 Vanilla Lean 4 (`v4.29.1`). **No Mathlib, no Batteries, no dependencies of any kind.** Every theorem is
 closed by `decide` — except `turn_is_square`, which is one core term-mode congruence, and which is
 term-mode precisely so that it stays axiom-free. The whole library is checkable by the Lean kernel alone,
-and **all 43 terminals are fully axiom-free** — not `{propext, Classical.choice, Quot.sound}`, but *no
-axioms at all*.
+and **every terminal the `AxiomCheck*.lean` files in this tree print is axiom-free** — not `{propext, Classical.choice, Quot.sound}`, but *no
+axioms at all*. **The number of terminals is not written out here.** A figure on a claiming sentence is exact on the day it is written and silently wrong afterwards; this repository ships no printed profile for a reader to check one against, so the count is removed rather than restated. *Repaired 2026-09-10. The sentence previously read "all 43 terminals are fully axiom-free": **43** was exact across the four check files of `v0.1`-`v0.4` and did not move when `v0.5` added the local model, which brought the tree to **69** `#print axioms` invocations across five files. Both figures count invocations in the source, not terminals certified by a run.*
 
 ```
 $ lake build && lake env lean AxiomCheck.lean
