@@ -30,8 +30,9 @@
            (p^n − 1)²  +  (2p^n − 1)  =  p^{2n}          (the Sonin-dimension split)
            (p^{2n} − p^n) − (p^{2n} − p^{n+1}) = (p−1)p^n (the orbit count, V − E)
            d_k-identity:  (p^{n−k} − 1)·(p^n − 1)          (the diagonal-law values)
-           fifth-law numerator: (p−1)·p^{n+1}·(p^{n−1} − p^{k−1})  ≡ R(k)·(p^n − 1)/(p−1)…
-           …compiled as the integer identity at each cell (see `fifthLaw_*` below).
+           fifth law: R(k)·(p^n − 1) = (p−1)·p^{n+1}·(p^{n−1} − p^{k−1}), compiled as the
+           cross-multiplied integer identity R_num·(p^n−1) = R_den·(p−1)·p^{n+1}·(p^{n−1}−p^{k−1})
+           at the banked cells (see `fifthLaw` below).
 
   NOT COMPILED, DECLARED RATHER THAN GLOSSED:
 

@@ -23,7 +23,10 @@
     (c) hence  #negatives = #positives = (M − nullity)/2,  nullity = #odd-length chains.
                                                             ← follows from (a) and (b)
 
-  ### WHAT IS COMPILED BELOW IS (a), THE NULLITY COUNT, AND THE ARITHMETIC OF (c).
+  ### WHAT IS COMPILED BELOW IS THE RESIDUE-CHAIN ARITHMETIC OF (a) — the residue-class sizes
+  ### and their sum to M — THE NULLITY COUNT, AND THE ARITHMETIC OF (c), EACH BY decide AT
+  ### LISTED (M, k); THAT S_k ACTS ON EACH CLASS AS A PATH ADJACENCY IS NOT STATED IN LEAN
+  ### HERE, AND (b) IS NOT COMPILED.
   ### WHAT IS NOT COMPILED IS (b), AND WITHOUT (b) NOTHING HERE IS A SPECTRAL STATEMENT.
 
   ── WHY (b) IS NOT HERE, RECORDED RATHER THAN GLOSSED ───────────────────────────
@@ -113,7 +116,7 @@ def nullityCF (M k : Nat) : Nat := if (M / k) % 2 == 0 then M % k else k - M % k
 def negCountCF (M k : Nat) : Nat := (M - nullityCF M k) / 2
 
 /-- ### THE CLOSED FORM AGREES WITH THE DIRECT DEFINITION on a family covering `q = 1 … 7`
-and three different `k`. **This is a check on small cases, not a proof for general `M, k`.** -/
+and four different `k` (4, 5, 6, 7). **This is a check on small cases, not a proof for general `M, k`.** -/
 theorem nullity_cf_agrees :
     nullity 7 5 = nullityCF 7 5 ∧ nullity 12 5 = nullityCF 12 5 ∧
     nullity 17 5 = nullityCF 17 5 ∧ nullity 22 5 = nullityCF 22 5 ∧
@@ -121,7 +124,7 @@ theorem nullity_cf_agrees :
     nullity 37 5 = nullityCF 37 5 ∧ nullity 30 7 = nullityCF 30 7 ∧
     nullity 31 4 = nullityCF 31 4 ∧ nullity 41 6 = nullityCF 41 6 := by decide
 
-/-- And so do the counts. -/
+/-- And so do the counts, on eight of those cases (`q = 1 … 7` at `k = 5`, and `q = 4` at `k = 7`). -/
 theorem negCount_cf_agrees :
     negCount 7 5 = negCountCF 7 5 ∧ negCount 12 5 = negCountCF 12 5 ∧
     negCount 17 5 = negCountCF 17 5 ∧ negCount 22 5 = negCountCF 22 5 ∧
@@ -130,7 +133,7 @@ theorem negCount_cf_agrees :
 
 /-- ### `M` AND THE NULLITY HAVE THE SAME PARITY, so `(M − nullity)/2` is an exact halving
 and not a truncation. *(The chain lengths sum to `M`, and a sum is odd exactly as often as
-its odd summands are — checked here on the same family.)* -/
+its odd summands are — checked here on the eight `k = 5` and `k = 7` cases of that family.)* -/
 theorem count_is_exact_halving :
     (7 - nullity 7 5) % 2 = 0 ∧ (12 - nullity 12 5) % 2 = 0 ∧
     (17 - nullity 17 5) % 2 = 0 ∧ (22 - nullity 22 5) % 2 = 0 ∧
@@ -150,8 +153,8 @@ theorem the_teeth :
     negCountCF 20 5 = 10 ∧ negCountCF 25 5 = 10 ∧ negCountCF 30 5 = 15 ∧
     negCountCF 35 5 = 15 := by decide
 
-/-- ### AT EVERY EVEN `q` THE COUNT IS EXACTLY HALF THE GRID — the apex, `2·count = M`.
-`q = 2, 4, 6, 8` at `k = 5`, and `q = 2, 4` at `k = 7` and `k = 11`. -/
+/-- ### ON A CLEAN GRID (`s = 0`), AT EVERY EVEN `q` THE COUNT IS EXACTLY HALF THE GRID — the apex,
+`2·count = M`. Checked at `q = 2, 4, 6, 8` at `k = 5`, and `q = 2, 4` at `k = 7` and `k = 11`. -/
 theorem apex_is_exactly_half :
     2 * negCountCF 10 5 = 10 ∧ 2 * negCountCF 20 5 = 20 ∧ 2 * negCountCF 30 5 = 30 ∧
     2 * negCountCF 40 5 = 40 ∧ 2 * negCountCF 14 7 = 14 ∧ 2 * negCountCF 28 7 = 28 ∧
