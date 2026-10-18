@@ -14,7 +14,9 @@
 
     (a) `i` and `j` are related only when `i = j ± k`, so `{0,…,M−1}` splits into the `k`
         residue classes modulo `k`, and `S_k` acts on each class as the adjacency matrix
-        of a PATH GRAPH on its members.                     ← COMBINATORIAL, COMPILED HERE
+        of a PATH GRAPH on its members.
+            ← ITS RESIDUE-CLASS SIZES AND THEIR SUM TO M COMPILED HERE (chainLens, chains_partition, by decide at listed (M, k));
+              THAT S_k ACTS AS A PATH ADJACENCY IS NOT STATED IN LEAN
 
     (b) the adjacency matrix of the path `P_m` has spectrum `2cos(πj/(m+1))`, `j = 1..m`,
         which is SYMMETRIC about `0` and has nullity `1` iff `m` is ODD.
